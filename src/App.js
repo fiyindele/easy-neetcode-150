@@ -25,7 +25,7 @@ function App() {
     <div className="App">
       <h1>Leetcode Check Duplicates</h1>
       <div>
-        <label>Enter comma-separated numbers:</label>
+        <label>Enter comma-separated numbers: </label>
         <input
           type="text"
           value={inputArray}
