@@ -17,6 +17,12 @@ function App() {
   const [string2, setString2] = useState("");
   const [result, setResult] = useState(null);
 
+  //state to manage form data
+  const [formData, setFormData] = useState({ nums: "", target: "" });
+
+  // state to manage the two-sum result (indices)
+  const [twoSumResult, setTwoSumResult] = useState("");
+
   // function to handle array input change
   const handleInputChange = (e) => {
     setInputArray(e.target.value);
@@ -39,6 +45,44 @@ function App() {
 
     //update the result state
     setResult(isAnagram);
+  };
+
+  // function to handle two-sum form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    //Parse the input values
+    const nums = formData.nums
+      .split(",")
+      .map((num) => parseInt(num.trim(), 10));
+    const target = parseInt(formData.target, 10);
+
+    // call the function to find the indices
+    const indices = findTwoSumindices(nums, target);
+
+    // update the result state
+    setResult(indices.join(", "));
+  };
+
+  // function to find indices of two numbers that add up to the target
+  const findTwoSumindices = (nums, target) => {
+    const numIndices = new Map();
+
+    for (let i = 0; i < nums.length; i++) {
+      const complement = target - nums[i];
+      if (numIndices.has(complement)) {
+        return [numIndices.get(complement), i];
+      }
+      numIndices.set(nums[i], i);
+    }
+
+    // No solution found
+    return [];
+  };
+
+  // function to handle change
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
@@ -87,6 +131,37 @@ function App() {
           <p className={result ? "success" : "error"}>
             {result ? "Anagrams!" : "Not Anagrams!"}
           </p>
+        )}
+      </div>
+
+      <div className="twosum">
+        <h1>Two Sum Problem Solver</h1>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Array Of Integers (comma=separated):</label>
+            <input
+              type="text"
+              name="nums"
+              value={formData.nums}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label>Target Sum:</label>
+            <input
+              type="text"
+              name="target"
+              value={formData.target}
+              onChange={handleChange}
+            />
+          </div>
+          <button type="submit">Find Indices</button>
+        </form>
+        {result && (
+          <div>
+            <h2>Result:</h2>
+            <p>{`Indices: ${result}`}</p>
+          </div>
         )}
       </div>
     </div>
